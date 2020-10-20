@@ -19,7 +19,9 @@
     "build:compile": "babel --source-maps --extensions \".ts\" --out-dir lib src",
     "build:declaration": "tsc",
     "build": "npm run build:clean && npm run build:compile && npm run build:declaration",
-    "test:unit": "jest"
+    "prepublish": "npm run test && npm run build",
+    "test:unit": "jest",
+    "test": "npm run test:unit"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.0",
