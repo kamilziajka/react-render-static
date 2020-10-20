@@ -1,0 +1,41 @@
+{
+  "name": "react-render-static",
+  "version": "1.0.0",
+  "description": "react-render-static",
+  "author": "Kamil Ziajka <k@zet.email>",
+  "license": "MIT",
+  "homepage": "https://github.com/kamilziajka/react-render-static",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kamilziajka/react-render-static.git"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "bin": {
+    "react-render-static": "bin/cli.js"
+  },
+  "scripts": {
+    "build:clean": "rimraf lib",
+    "build:compile": "babel --source-maps --extensions \".ts\" --out-dir lib src",
+    "build:declaration": "tsc",
+    "build": "npm run build:clean && npm run build:compile && npm run build:declaration",
+    "test:unit": "jest"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.0",
+    "@babel/preset-env": "^7.12.0",
+    "@babel/preset-react": "^7.12.0",
+    "@babel/preset-typescript": "^7.12.0",
+    "@types/react": "^16.9.0",
+    "jest": "^26.5.0",
+    "rimraf": "^3.0.0",
+    "ts-jest": "^26.4.0",
+    "typescript": "^4.0.0"
+  },
+  "dependencies": {
+    "@babel/core": "^7.12.0",
+    "@babel/register": "^7.12.0",
+    "react": "^16.14.0",
+    "xml-formatter": "^2.3.0"
+  }
+}
