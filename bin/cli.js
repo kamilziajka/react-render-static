@@ -2,50 +2,44 @@
 
 require('@babel/register');
 
+const { Command } = require('commander');
 const fs = require('fs');
 const path = require('path');
 const { createElement } = require('react');
 const { render } = require('../');
+const { version } = require('../package.json');
 
-const args = process.argv.slice(2);
+const program = new Command();
 
-const prettifyOptions = ['--prettify', '-p'];
+program
+    .name('react-render-static')
+    .version(version)
+    .usage('[options] file')
+    .option('-p, --prettify', 'prettify output', false)
+    .arguments('<filePath>')
+    .action(filePath => {
+        const absoluteFilePath = path.resolve(process.cwd(), filePath);
 
-if (!args.length) {
-    console.log('react-render-static [options] <file>');
-    console.log('options:');
-    console.log(`${prettifyOptions.join(', ')}      prettify output`);
-    return;
-}
+        if (!fs.existsSync(absoluteFilePath)) {
+            console.error(`File ${absoluteFilePath} does not exist.`);
+            process.exitCode = 1;
+            return;
+        }
 
-const [filePath, ...options] = args.reverse();
+        try {
+            const { default: Component } = require(absoluteFilePath);
+            const element = createElement(Component);
 
-if (!filePath) {
-    console.error('Please specify input file as a first argument.');
-    process.exitCode = 1;
-    return;
-}
+            const { prettify } = program;
+            const output = render(element, { prettify });
 
-const absoluteFilePath = path.resolve(process.cwd(), filePath);
+            console.log(output);
+        }
+        catch (error) {
+            console.error(`Error occurred while trying to render React component.`);
+            console.error(error);
+            process.exitCode = 1;
+        }
+    });
 
-if (!fs.existsSync(absoluteFilePath)) {
-    console.error(`File ${absoluteFilePath} does not exist.`);
-    process.exitCode = 1;
-    return;
-}
-
-try {
-    const { default: Component } = require(absoluteFilePath);
-    const element = createElement(Component);
-
-    const prettify = !!~options.findIndex(option => prettifyOptions.includes(option));
-    const output = render(element, { prettify });
-
-    console.log(output);
-}
-catch (error) {
-    console.error(`Error occurred while trying to render React component.`);
-    console.error(error);
-    process.exitCode = 1;
-    return;
-}
+program.parse(process.argv);
