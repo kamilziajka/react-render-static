@@ -1,4 +1,4 @@
-import { ReactComponentElement, ReactNode } from 'react';
+import { Fragment as ReactFragment, ReactComponentElement, ReactNode } from 'react';
 import { renderTag } from './render-tag';
 
 export const renderElement = (element: ReactNode): string => {
@@ -33,6 +33,12 @@ export const renderElement = (element: ReactNode): string => {
     const { children, ...remainingProps } = props;
 
     const renderedChildren = renderElement([].concat(children));
+
+    const { type: Fragment } = <ReactComponentElement<typeof ReactFragment>>element;
+
+    if (typeof Fragment === 'symbol' && Fragment === ReactFragment) {
+        return renderedChildren;
+    }
 
     return renderTag(Component, remainingProps, renderedChildren);
 };
