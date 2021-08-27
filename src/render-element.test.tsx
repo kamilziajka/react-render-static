@@ -45,6 +45,42 @@ describe('renderElement', () => {
         expect(result).toBe('1337');
     });
 
+    it('should stringify arrays', () => {
+        const element = [
+            <div/>,
+            <span/>,
+            <form>hello</form>
+        ];
+        const result = renderElement(element);
+        expect(result).toBe('<div/><span/><form>hello</form>');
+    });
+
+    it('should stringify fragments', () => {
+        const element = (
+            <React.Fragment>
+                <div/>
+                <span/>
+                <form>hello</form>
+            </React.Fragment>
+        );
+
+        const result = renderElement(element);
+        expect(result).toBe('<div/><span/><form>hello</form>');
+    });
+
+    it('should stringify fragments defined using short syntax', () => {
+        const element = (
+            <>
+                <div/>
+                <span/>
+                <form>hello</form>
+            </>
+        );
+
+        const result = renderElement(element);
+        expect(result).toBe('<div/><span/><form>hello</form>');
+    });
+
     it('should stringify a tag', () => {
         // @ts-ignore
         const element = <foo/>;
